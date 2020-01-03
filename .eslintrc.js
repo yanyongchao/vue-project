@@ -1,35 +1,25 @@
-module.exports = {
+module.exports ={
   root: true,
-  //指定解析器选项
-  parserOptions: {
-      sourceType: 'module',
-      ecmaVersion: 2015,
-      jsx: true
-  },
-  parser: 'babel-eslint',
-  extends: [
-    'eslint:recommended'
-  ],
-  //指定脚本的运行环境
   env: {
-      browser: true,
-      node: true
+    node: true,
+    browser: true
   },
-  // 启用的规则及其各自的错误级别
-  rules: {
-    'indent': ['error', 2],//缩进风格
-    'quotes': ['error', 'single'],//引号类型 
-    'semi': ['error', 'never'],//关闭语句强制分号结尾
-    'no-console': 0,//禁止使用console
-    'arrow-parens': 0 //箭头函数用小括号括起来
+  parserOptions: {
+    parser: 'babel-eslint',
+    sourceMap: 'module',
+    ecmaVersion: 7
   },
-  plugins: [
-    'html'
+  extends: [
+    'plugin:vue/essential',
+    'standard'
   ],
-  globals: {
-    window: true,
-    $: true,
-    jQuery: true,
-    XX: true
+  rules: {
+    'space-before-function-paren': 'error', // 关闭函数函数声明在小括号前必须加空格的规则
+    'no-trailing-spaces': 'off', // 关闭禁用行尾空格
+    'eol-last': 'off', // 关闭要求或禁止文件末尾存在空行
+    'comma-dangle': 'warn', // 出现拖尾逗号仅反馈警告，而不是报错
+    'no-console': 'off',
+    indent: ['error', 2],
+    quotes: ['error', 'single']
   }
 }

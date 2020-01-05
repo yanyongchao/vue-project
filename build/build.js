@@ -1,11 +1,11 @@
-const webpack = require('webpack')
+const Webpack = require('webpack')
 const config = require('./webpack.prod.conf')
 
-webpack(config, (err, stats) => {
+Webpack(config, (err, stats) => {
   if (err || stats.hasErrors()) {
     // 在这里处理错误
     console.error(err)
-    return
+    // return
   }
   // 处理完成
   console.log(stats.toString({

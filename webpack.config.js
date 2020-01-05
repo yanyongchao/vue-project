@@ -13,7 +13,7 @@ const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = {
   entry: {
-    main: ['@babel/polyfill', resolve('src/index.js')]
+    main: resolve('src/index.js')
   },
   output: {
     path: resolve('dist'),
@@ -91,7 +91,7 @@ module.exports = {
             loader: 'url-loader',
             options: { 
               limit: 4096,
-              outputPath: 'images',
+              outputPath: 'images', // 输出到某个文件夹
               publicPath: '/images' 
             }
           }
@@ -126,3 +126,9 @@ module.exports = {
     port: 3000
   }
 }
+
+/**
+ * loader 转化器
+ * loader顺序：从右往左，从下到上
+ * loader分类(enforce)：前置loader(pre) 后置loader(post) 普通loader(normal)
+ */

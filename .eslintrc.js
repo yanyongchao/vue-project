@@ -21,5 +21,8 @@ module.exports ={
     'no-console': 'off',
     indent: ['error', 2],
     quotes: ['error', 'single']
+  },
+  globals: {
+    Vue: true
   }
 }

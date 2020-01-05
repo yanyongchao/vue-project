@@ -1,10 +1,19 @@
 const merge = require('webpack-merge')
+// const path = require('path')
 const baseConf = require('./webpack.base.conf')
+const Webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
+const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
+
+// const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = merge(baseConf, {
+  mode: 'production',
+  devtool: 'none',
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -17,9 +26,50 @@ module.exports = merge(baseConf, {
         // cssnano是PostCSS的CSS优化和分解插件。cssnano采用格式很好的CSS，并通过许多优化，以确保最终的生产环境尽可能小。
         cssProcessor: require('cssnano')
       })
-    ]
+    ],
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        libs: {
+          name: 'chunk-libs',
+          test: /[\\/]node_modules[\\/]/,
+          priority: 10,
+          chunks: 'initial' // 只打包初始时依赖的第三方
+        }
+        // elementUI: {
+        //   name: 'chunk-elementUI', // 单独将 elementUI 拆包
+        //   priority: 20, // 权重要大于 libs 和 app 不然会被打包进 libs 或者 app
+        //   test: /[\\/]node_modules[\\/]element-ui[\\/]/
+        // },
+        // commons: {
+        //   name: 'chunk-commons',
+        //   test: resolve('../src/components'), // 可自定义拓展你的规则
+        //   minChunks: 2, // 最小共用次数
+        //   priority: 5,
+        //   reuseExistingChunk: true
+        // }
+      }
+    }
+  },
+  // 配置如何显示性能提示
+  performance: {
+    // 可选 warning、error、false
+    // false：性能设置,文件打包过大时，不报错和警告，只做提示
+    // warning：显示警告，建议用在开发环境
+    // error：显示错误，建议用在生产环境，防止部署太大的生产包，从而影响网页性能
+    hints: false
   },
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new Webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify('production')
+    }),
+    new CompressionWebpackPlugin({
+      filename: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: productionGzipExtensions,
+      threshold: 10240,
+      minRatio: 0.8
+    })
   ]
 })

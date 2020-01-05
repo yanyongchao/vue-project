@@ -5,7 +5,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const chalk = require('chalk')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
+const isProd = process.env.NODE_ENV === 'production'
 const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = {
@@ -15,8 +17,10 @@ module.exports = {
   output: {
     path: resolve('../dist'),
     filename: 'js/[name].[hash:8].js',
+    chunkFilename: 'js/[name].[chunkhash:8].bundle.js',
     publicPath: '/'
   },
+  
   resolve: {
     alias: {
       vue$: 'vue/dist/vue.runtime.esm.js',
@@ -30,6 +34,9 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader', 
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
           'css-loader',
           {
             loader: 'postcss-loader'
@@ -89,8 +96,11 @@ module.exports = {
       chunks: ['main']
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: '[id].css'
+      filename: isProd ? 'css/[name].[contenthash:8].css' : 'css/[name].css',
+      chunkFilename: isProd ? 'css/[id].[contenthash:8].css' : 'css/[id].css'
+    }),
+    new Webpack.ProvidePlugin({
+      Vue: 'vue'
     }),
     new ProgressBarPlugin({
       format: `build [:bar] ${chalk.green.bold(':percent')} (:elapsed seconds)`,
@@ -99,6 +109,15 @@ module.exports = {
     }),
     new Webpack.NamedModulesPlugin(),
     new Webpack.HotModuleReplacementPlugin(),
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new Webpack.DllReferencePlugin({ // 引用dllplugin
+      manifest: path.join(__dirname, 'vue_dll_manifest.json')
+    }),
+    new CopyPlugin([
+      {
+        from: resolve('../static'),
+        to: resolve('../dist/static')
+      }
+    ])
   ]
 }

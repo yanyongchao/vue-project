@@ -3,6 +3,8 @@ const merge = require('webpack-merge')
 const Webpack = require('webpack')
 const baseConf = require('./webpack.base.conf')
 
+const PORD = 3000
+
 const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = merge(baseConf, {
@@ -11,13 +13,33 @@ module.exports = merge(baseConf, {
   plugins: [
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('development')
-    })
-    
+    }),
+    new Webpack.NamedModulesPlugin(),
+    new Webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     contentBase: resolve('../dist'),
     host: 'localhost',
     compress: true,
-    port: 3000
+    port: PORD,
+    proxy: {
+      '/api': {
+        target: 'https://merchantapp-admin-test.51fubei.com',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      },
+      '/mock': {
+        target: `http://localhost:${PORD}/mock`,
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/mock': ''
+        }
+      }
+    },
+    before: require('../mock')
   }
 })

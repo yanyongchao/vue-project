@@ -107,8 +107,6 @@ module.exports = {
       clear: false,
       width: 60
     }),
-    new Webpack.NamedModulesPlugin(),
-    new Webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
     new Webpack.DllReferencePlugin({ // 引用dllplugin
       manifest: path.join(__dirname, 'vue_dll_manifest.json')

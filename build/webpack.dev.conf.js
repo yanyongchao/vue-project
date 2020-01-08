@@ -22,6 +22,11 @@ module.exports = merge(baseConf, {
     host: 'localhost',
     compress: true,
     port: PORD,
+    inline: true,
+    overlay: {
+      warnings: false,
+      errors: true
+    },
     proxy: {
       '/api': {
         target: 'https://merchantapp-admin-test.51fubei.com',

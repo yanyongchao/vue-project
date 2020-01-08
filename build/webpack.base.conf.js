@@ -16,8 +16,7 @@ module.exports = {
   },
   output: {
     path: resolve('../dist'),
-    filename: 'js/[name].[hash:8].js',
-    chunkFilename: 'js/[name].[chunkhash:8].bundle.js',
+    filename: 'js/[name].[chunkhash].js',
     publicPath: '/'
   },
   

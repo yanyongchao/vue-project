@@ -1,0 +1,5 @@
+last 5 versions
+not ie <= 8
+iOS >= 7
+Firefox >= 20
+Android >= 4.1

@@ -2,6 +2,7 @@ const path = require('path')
 const merge = require('webpack-merge')
 const Webpack = require('webpack')
 const baseConf = require('./webpack.base.conf')
+const apiMocker = require('mocker-api')
 
 const PORD = 3000
 
@@ -23,6 +24,8 @@ module.exports = merge(baseConf, {
     compress: true,
     port: PORD,
     inline: true,
+    hot: true,
+    open: true,
     overlay: {
       warnings: false,
       errors: true
@@ -36,6 +39,7 @@ module.exports = merge(baseConf, {
           '^/api': ''
         }
       },
+      // mocker-api
       '/mock': {
         target: `http://localhost:${PORD}/mock`,
         ws: true,
@@ -45,6 +49,8 @@ module.exports = merge(baseConf, {
         }
       }
     },
-    before: require('../mock')
+    before (app) {
+      apiMocker(app, path.resolve('./mock/index.js'))
+    }
   }
 })

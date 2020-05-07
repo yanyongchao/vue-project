@@ -6,14 +6,18 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-
+const TimePlugin = require('../plugin/TimePlugin')
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
 
+// 测量各个插件和loader所花费的时间
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
 // const resolve = dir => path.resolve(__dirname, dir)
 
-module.exports = merge(baseConf, {
+module.exports = smp.wrap(merge(baseConf, {
   mode: 'production',
-  devtool: 'none',
+  devtool: 'none', // none或者source-map
   optimization: {
     minimizer: [
       new TerserPlugin({
@@ -49,6 +53,10 @@ module.exports = merge(baseConf, {
           reuseExistingChunk: true
         }
       }
+    },
+    // runtimeChunk 的作用是将包含 chunk 映射关系的列表从 main.js 中抽离出来，在配置了 splitChunk 时，记得配置 runtimeChunk.
+    runtimeChunk: {
+      name: 'manifest'
     }
   },
   // 配置如何显示性能提示
@@ -64,12 +72,14 @@ module.exports = merge(baseConf, {
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production')
     }),
+    new HardSourceWebpackPlugin(),
     new CompressionWebpackPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: productionGzipExtensions,
       threshold: 10240,
       minRatio: 0.8
-    })
+    }),
+    new TimePlugin()
   ]
-})
+}))

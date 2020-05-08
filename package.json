@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.conf.js",
-    "build:dll": "cross-env NODE_ENV=production webpack --config build/webpack.dll.conf.js",
-    "build": "cross-env NODE_ENV=production node build/build.js",
+    "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "build:dll": "webpack --config build/webpack.dll.conf.js",
+    "build": "node build/build.js",
     "genlog": "conventional-changelog -p vue -i CHANGELOG.md -s"
   },
   "config": {
@@ -86,6 +86,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^3.6.1",
+    "nprogress": "^0.2.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.3"
   }

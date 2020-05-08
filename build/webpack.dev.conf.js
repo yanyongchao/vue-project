@@ -10,7 +10,7 @@ const resolve = dir => path.resolve(__dirname, dir)
 
 module.exports = merge(baseConf, {
   mode: 'development',
-  devtool: 'cheap-eval-source-map',
+  devtool: 'source-map',
   plugins: [
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('development')

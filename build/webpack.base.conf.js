@@ -107,10 +107,24 @@ module.exports = {
     ]
   },
   plugins: [
+    // new HtmlWebpackPlugin({
+    //   template: resolve('../src/index.html'),
+    //   filename: 'index.html',
+    //   chunks: ['main']
+    // }),
     new HtmlWebpackPlugin({
       template: resolve('../src/index.html'),
       filename: 'index.html',
-      chunks: ['main']
+      chunks: ['main'],
+      inject: true,
+      minify: {
+        html5: true, 
+        collapseWhitespace: true, 
+        preserveLineBreaks: false, 
+        minifyCSS: true,
+        minifyJS: true, 
+        removeComments: false
+      } 
     }),
     new MiniCssExtractPlugin({
       // 为什么用contenthash，js使用chunkhash，当js变化是，所关联的css的hash也会变，但是用contenthash就不会变

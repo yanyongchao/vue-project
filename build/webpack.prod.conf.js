@@ -17,7 +17,7 @@ const smp = new SpeedMeasurePlugin()
 
 module.exports = smp.wrap(merge(baseConf, {
   mode: 'production',
-  devtool: 'none', // none或者source-map
+  devtool: 'source-map', // none或者source-map
   optimization: {
     minimizer: [
       new TerserPlugin({

@@ -13,13 +13,14 @@ export default {
     return {
     }
   },
+  created () {
+    this.$axios.get('/user/info')
+      .then((res) => {
+      })
+  },
   methods: {
     handleClick () {
       console.log([1].includes(1))
-      this.$axios.get('/user/info')
-        .then((res) => {
-          console.log(res)
-        })
     }
   },
   components: {
